@@ -9,7 +9,7 @@ using DroneLab.UI.Views;
 
 namespace DroneLab.UI;
 
-public partial class App : Application
+public partial class App : Avalonia.Application
 {
     public override void Initialize()
     {
