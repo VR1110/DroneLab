@@ -3,18 +3,70 @@
         xmlns:vm="using:DroneLab.UI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
         x:Class="DroneLab.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="DroneLab.UI">
+        Title="DroneLab Ground Control"
+        Width="400" Height="450"
+        WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    <Grid RowDefinitions="Auto, *" Margin="20">
+        <TextBlock Grid.Row="0" Text="DroneLab Ground Control" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+        
+        <StackPanel Grid.Row="1" Spacing="10" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Статус связи: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding StatusText}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Режим полета: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding FlightModeText}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Координаты: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding CoordinatesText}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Высота: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding Altitude}"/>
+                <TextBlock Text=" м"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Скорость: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding Speed}"/>
+                <TextBlock Text=" м/с"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Тангаж (Pitch): " FontWeight="Bold"/>
+                <TextBlock Text="{Binding Pitch}"/>
+                <TextBlock Text="°"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Крен (Roll): " FontWeight="Bold"/>
+                <TextBlock Text="{Binding Roll}"/>
+                <TextBlock Text="°"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Курс (Yaw): " FontWeight="Bold"/>
+                <TextBlock Text="{Binding Yaw}"/>
+                <TextBlock Text="°"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Батарея: " FontWeight="Bold"/>
+                <TextBlock Text="{Binding BatteryText}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
 </Window>

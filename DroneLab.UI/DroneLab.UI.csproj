@@ -26,5 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DroneLab.Application\DroneLab.Application.csproj" />
+    <ProjectReference Include="..\DroneLab.Infrastructure\DroneLab.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
