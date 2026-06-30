@@ -21,7 +21,7 @@ public class MockDroneReceiver : IDroneReceiver
     private readonly Random _random = new();
 
     // Начальные параметры виртуального дрона
-    private double _latitude = 50.4501;  // Киев, к примеру
+    private double _latitude = 50.4501;  // Киев
     private double _longitude = 30.5234;
     private double _altitude = 0.0;
     private double _batteryVoltage = 25.2; // 6S батарея (полный заряд)

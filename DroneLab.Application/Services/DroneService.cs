@@ -1,48 +1,112 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 using DroneLab.Application.Interfaces;
 using DroneLab.Domain.Entities;
+using DroneLab.Domain.Models;
 
 namespace DroneLab.Application.Services;
 
-/// <summary>
-/// Сервис управления состоянием дрона и координации потока телеметрии.
-/// </summary>
 public class DroneService
 {
     private readonly IDroneReceiver _receiver;
+    private readonly IFlightRepository _flightRepository;
 
-    /// <summary>
-    /// Активная сущность дрона, с которой работает станция.
-    /// </summary>
-    public Drone CurrentDrone { get; }
+    private Guid? _currentSessionId;
+    private readonly ConcurrentQueue<TelemetryRecord> _telemetryBuffer = new();
+    private readonly int _batchSize = 20;
 
-    public DroneService(IDroneReceiver receiver)
+    public event Action<DroneTelemetry>? TelemetryReceived;
+
+    // Свойство для хранения текущего подключенного устройства
+    public Drone? CurrentDrone { get; set; }
+
+    public DroneService(IDroneReceiver receiver, IFlightRepository flightRepository)
     {
         _receiver = receiver ?? throw new ArgumentNullException(nameof(receiver));
+        _flightRepository = flightRepository ?? throw new ArgumentNullException(nameof(flightRepository));
 
-        // Создаем дефолтный экземпляр дрона (в будущем ID можно запрашивать из базы/конфига)
-        CurrentDrone = new Drone(Guid.NewGuid(), "Drone-Lab Alpha");
-
-        // Подписываем сущность дрона на события изменения данных от приемника
-        _receiver.TelemetryReceived += CurrentDrone.UpdateTelemetry;
-        _receiver.ConnectionStatusChanged += CurrentDrone.SetConnectionStatus;
+        _receiver.TelemetryReceived += OnTelemetryDataReceived;
     }
 
-    /// <summary>
-    /// Команда на запуск подключения к дрону (или симулятору).
-    /// </summary>
-    public async Task ConnectAsync(CancellationToken cancellationToken = default)
+    public async Task ConnectAsync()
     {
-        await _receiver.StartAsync(cancellationToken);
+        await _receiver.StartAsync();
     }
 
-    /// <summary>
-    /// Команда на отключение от дрона.
-    /// </summary>
-    public async Task DisconnectAsync()
+    public async Task StartFlightSessionAsync(string droneName)
     {
-        await _receiver.StopAsync();
+        if (_currentSessionId != null) return;
+
+        var session = new FlightSession
+        {
+            Id = Guid.NewGuid(),
+            StartTime = DateTime.UtcNow,
+            DroneName = droneName
+        };
+
+        await _flightRepository.StartSessionAsync(session);
+        _currentSessionId = session.Id;
+    }
+
+    public async Task StopFlightSessionAsync()
+    {
+        if (_currentSessionId == null) return;
+
+        await FlushBufferAsync();
+
+        await _flightRepository.EndSessionAsync(_currentSessionId.Value, DateTime.UtcNow);
+        _currentSessionId = null;
+    }
+
+    private async void OnTelemetryDataReceived(DroneTelemetry telemetry)
+    {
+        // Пробрасываем событие дальше к UI слою
+        TelemetryReceived?.Invoke(telemetry);
+
+        if (_currentSessionId != null)
+        {
+            var record = new TelemetryRecord
+            {
+                FlightSessionId = _currentSessionId.Value,
+                Timestamp = DateTime.UtcNow,
+                Latitude = telemetry.Coordinates.Latitude,
+                Longitude = telemetry.Coordinates.Longitude,
+                Altitude = (float)telemetry.Coordinates.Altitude,
+                Speed = (float)telemetry.Speed,
+                Mode = telemetry.Mode
+            };
+
+            _telemetryBuffer.Enqueue(record);
+
+            if (_telemetryBuffer.Count >= _batchSize)
+            {
+                await FlushBufferAsync();
+            }
+        }
+    }
+
+    private async Task FlushBufferAsync()
+    {
+        var recordsToWrite = new List<TelemetryRecord>();
+
+        while (_telemetryBuffer.TryDequeue(out var record))
+        {
+            recordsToWrite.Add(record);
+        }
+
+        if (recordsToWrite.Any())
+        {
+            try
+            {
+                await _flightRepository.SaveTelemetryBatchAsync(recordsToWrite);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Ошибка записи пакета телеметрии: {ex.Message}");
+            }
+        }
     }
 }

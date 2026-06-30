@@ -1,72 +1,82 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:DroneLab.UI.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
         x:Class="DroneLab.UI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="DroneLab Ground Control"
-        Width="400" Height="450"
+        Title="DroneLab Ground Control" 
+        Width="450" 
+        Height="550"
         WindowStartupLocation="CenterScreen">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <Grid RowDefinitions="Auto, *" Margin="20">
-        <TextBlock Grid.Row="0" Text="DroneLab Ground Control" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+    
+    <StackPanel Margin="20" Spacing="12">
+        <TextBlock Text="DroneLab Ground Control" 
+                   FontSize="22" 
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,10"/>
         
-        <StackPanel Grid.Row="1" Spacing="10" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Статус связи: " FontWeight="Bold"/>
-                <TextBlock Text="{Binding StatusText}"/>
-            </StackPanel>
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="10,0">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Статус связи: " FontWeight="Bold" Margin="0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding StatusText}" Margin="5,4"/>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Режим полета: " FontWeight="Bold"/>
-                <TextBlock Text="{Binding FlightModeText}"/>
-            </StackPanel>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Режим полета: " FontWeight="Bold" Margin="0,4"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FlightModeText}" Margin="5,4"/>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Координаты: " FontWeight="Bold"/>
-                <TextBlock Text="{Binding CoordinatesText}"/>
-            </StackPanel>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Координаты: " FontWeight="Bold" Margin="0,4"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CoordinatesText}" Margin="5,4"/>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Высота: " FontWeight="Bold"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Высота: " FontWeight="Bold" Margin="0,4"/>
+            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="5,4">
                 <TextBlock Text="{Binding Altitude}"/>
                 <TextBlock Text=" м"/>
             </StackPanel>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Скорость: " FontWeight="Bold"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Скорость: " FontWeight="Bold" Margin="0,4"/>
+            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="5,4">
                 <TextBlock Text="{Binding Speed}"/>
                 <TextBlock Text=" м/с"/>
             </StackPanel>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Тангаж (Pitch): " FontWeight="Bold"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Тангаж (Pitch): " FontWeight="Bold" Margin="0,4"/>
+            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="5,4">
                 <TextBlock Text="{Binding Pitch}"/>
                 <TextBlock Text="°"/>
             </StackPanel>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Крен (Roll): " FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Крен (Roll): " FontWeight="Bold" Margin="0,4"/>
+            <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" Margin="5,4">
                 <TextBlock Text="{Binding Roll}"/>
                 <TextBlock Text="°"/>
             </StackPanel>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Курс (Yaw): " FontWeight="Bold"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Курс (Yaw): " FontWeight="Bold" Margin="0,4"/>
+            <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" Margin="5,4">
                 <TextBlock Text="{Binding Yaw}"/>
                 <TextBlock Text="°"/>
             </StackPanel>
             
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Батарея: " FontWeight="Bold"/>
-                <TextBlock Text="{Binding BatteryText}"/>
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Батарея: " FontWeight="Bold" Margin="0,4"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding BatteryText}" Margin="5,4"/>
+        </Grid>
+        
+        <Separator Height="1" Background="Gray" Margin="0,10"/>
+        
+        <Button Content="Подключить устройство" 
+                Command="{Binding ConnectCommand}" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center"
+                Padding="10"/>
+        
+        <Button Content="Старт полета (Запись в БД)" 
+                Command="{Binding StartFlightCommand}" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center"
+                Padding="10"/>
+        
+        <Button Content="Стоп полета" 
+                Command="{Binding StopFlightCommand}" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center"
+                Padding="10"/>
+    </StackPanel>
 </Window>
