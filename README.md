@@ -1,10 +1,10 @@
 # DroneLab Ground Control
 
-**DroneLab** — это кроссплатформенное приложение наземной станции управления (GCS) для мониторинга телеметрии БПЛА в реальном времени. Проект разработан на платформе **.NET 10** с использованием фреймворка **Avalonia UI** и спроектирован по принципам чистой архитектуры (**Clean Architecture**).
+**DroneLab** is a cross-platform Ground Control Station (GCS) application designed for real-time UAV telemetry monitoring. The project is built on the **.NET 10** platform using the **Avalonia UI** framework and strictly follows **Clean Architecture** principles.
 
 ---
 
-## 📱 Интерфейс приложения
+## 📱 Application Interface
 
 <p align="center">
   <img src="images/main_ui.png" alt="DroneLab Telemetry UI" width="450"/>
@@ -12,39 +12,48 @@
 
 ---
 
-## 🚀 Основной функционал
+## 🚀 Key Features
 
-*   **Мониторинг телеметрии в реальном времени:** Отслеживание пространственной ориентации (Pitch, Roll, Yaw), координат (GPS), высоты, скорости и состояния батареи.
-*   **Высокоскоростная связь:** Поддержка стабильного соединения по беспроводным каналам передачи данных (включая диапазоны 5 ГГц).
-*   **Энергонезависимое логирование:** Автоматическая запись всех параметров и состояний полета в локальную базу данных (SQLite) для последующего анализа миссий.
-*   **Управление состояниями:** Интуитивное подключение устройств, запуск и остановка фиксации полетных данных одной кнопкой.
-
----
-
-## 🏗️ Архитектура проекта
-
-Приложение разделено на независимые слои в соответствии с канонами **Clean Architecture**, что обеспечивает высокую тестируемость и легкую замену компонентов:
-
-*   **DroneLab.Domain:** Ядро системы. Содержит базовые сущности телеметрии, бизнес-правила и типы данных (координаты, углы ориентации, состояние батареи). Не имеет внешних зависимостей.
-*   **DroneLab.Application:** Слой бизнес-логики. Описывает сценарии использования (Use Cases), такие как обработка потока телеметрии, управление сессиями полета и интерфейсы (инверсия зависимостей) для работы с БД.
-*   **DroneLab.Infrastructure:** Реализация инфраструктурных задач. Отвечает за взаимодействие с базой данных (SQLite/Entity Framework Core) и низкоуровневый прием данных с устройства.
-*   **DroneLab.UI (Avalonia UI):** Слой представления. Построен с использованием паттерна **MVVM**. Благодаря Avalonia UI, интерфейс является полностью кроссплатформенным и обладает высокой производительностью отрисовки.
+*   **Real-Time Telemetry Monitoring:** Live tracking of UAV spatial orientation (Pitch, Roll, Yaw), GPS coordinates, altitude, speed, and battery status.
+*   **High-Speed Connectivity:** Engineered to support stable data links over high-bandwidth wireless channels (including 5 GHz bands).
+*   **Persistent Flight Logging:** Automatic, non-volatile logging of all telemetry parameters into a local database (SQLite) for post-mission analysis.
+*   **State Management:** Intuitive UI controls for device connection, alongside one-click start/stop commands for flight data recording.
 
 ---
 
-## 🛠️ Технологический стек
+## 🏗️ Architecture Overview
 
-*   **Платформа:** .NET 10 (C#)
-*   **UI Фреймворк:** Avalonia UI (MVVM)
-*   **База данных:** SQLite
-*   **Архитектурный паттерн:** Clean Architecture
+The application is decoupled into independent layers adhering to **Clean Architecture** guidelines, ensuring high testability and easily replaceable components:
+
+*   **DroneLab.Domain:** The core of the system. Contains fundamental telemetry entities, enterprise business rules, and basic data models (coordinates, orientation angles, battery metrics). It has zero external dependencies.
+*   **DroneLab.Application:** The business logic layer. Defines core use cases such as telemetry stream processing, flight session handling, and abstraction interfaces (Dependency Inversion) for data persistence.
+*   **DroneLab.Infrastructure:** Infrastructure concerns. Implements database access (SQLite via Entity Framework Core) and low-level hardware communication interfaces for data ingestion.
+*   **DroneLab.UI (Avalonia UI):** The presentation layer built on the **MVVM** pattern. Leveraging Avalonia UI, it delivers a high-performance, cross-platform user interface.
 
 ---
 
-## 🏁 Быстрый запуск
+## 🛠️ Tech Stack
 
-Для запуска приложения локально убедитесь, что у вас установлен SDK .NET 10.
+*   **Platform:** .NET 10 (C#)
+*   **UI Framework:** Avalonia UI (MVVM)
+*   **Database:** SQLite
+*   **Architectural Pattern:** Clean Architecture
 
-1. Склонируйте репозиторий:
+---
+
+## 🏁 Quick Start
+
+To run the application locally, ensure you have the .NET 10 SDK installed.
+
+1. Clone the repository:
    ```bash
    git clone [https://github.com/VR1110/DroneLab.git](https://github.com/VR1110/DroneLab.git)
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd DroneLab
+   ```
+3. Run the UI project:
+   ```bash
+   dotnet run --project DroneLab.UI
+   ```
