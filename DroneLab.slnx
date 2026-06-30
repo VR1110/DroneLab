@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DroneLab.Application/DroneLab.Application.csproj" />
+  <Project Path="DroneLab.Domain/DroneLab.Domain.csproj" />
+  <Project Path="DroneLab.Infrastructure/DroneLab.Infrastructure.csproj" />
+  <Project Path="DroneLab.UI/DroneLab.UI.csproj" />
+</Solution>
